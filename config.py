@@ -1,7 +1,8 @@
-API_KEY_NOUS = ""
-API_KEY_GPT = ""
+API_KEY_NOUS = "sk-bxNhjveVwh6Hd-HOOSK3YQ"
+API_KEY_GPT = "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"
 
 NOUS_AI_MODEL = "DeepHermes-3-Mistral-24B-Preview"
+GPT_MODEL = "gpt-4"
 
 PROXY = None #"http://user:pass@ip:port"
 

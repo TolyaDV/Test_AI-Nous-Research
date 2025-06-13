@@ -1,7 +1,14 @@
 import requests
+from colorama import init, Fore, Style
 
-from config import API_KEY_GPT, API_KEY_NOUS, BASIC_PROMPT_FOR_GPT, NOUS_AI_MODEL
+import sys
+
+from config import API_KEY_GPT, API_KEY_NOUS, BASIC_PROMPT_FOR_GPT, NOUS_AI_MODEL, GPT_MODEL
 from logger import logger
+from exceptions import BalanceError, RequestsError
+
+init(autoreset=True)
+RED = Fore.RED + Style.BRIGHT
 
 
 def requests_function(url: str, headers: dict, data: dict, proxy: str | None = None) -> str | None:
@@ -15,16 +22,23 @@ def requests_function(url: str, headers: dict, data: dict, proxy: str | None = N
         else:
             response = requests.post(url=url, headers=headers, json=data, timeout=15).json()
         
+        if 'error' in response and 'insufficient_quota' in response['error'].get('type', ''):
+            raise BalanceError(f"{RED}NOT ENOUGH BALANCE")
+        
         return response['choices'][0]['message']['content']
+
     
-    except ValueError as error:
+    except ValueError:
         logger.error(f"Invalid JSON")
     except requests.HTTPError:
         logger.error(f"HTTP error")
     except TimeoutError as tmerror:
         logger.error(f"Timeoute error | {tmerror}")
-    except Exception as error:
-        logger.error(f"Unexpected error | {error}")
+    except BalanceError as e:
+        logger.critical(str(e))
+        sys.exit()
+    except Exception as e:
+        logger.error(f"{RED}Unexpected error | {e}")
         
     return None
 
@@ -41,7 +55,7 @@ def generate_question_from_gpt(prompt: str = "start", proxy: str = None) -> str 
     }
 
     data = {
-        "model": "gpt-4", 
+        "model": GPT_MODEL, 
         "messages": [
             {"role": "system", "content": BASIC_PROMPT_FOR_GPT},
             {"role": "user", "content": str(prompt)}
@@ -80,7 +94,7 @@ def check_requests(resp: str | None) -> Exception | str:
     """Function for checking the result of the request"""
     
     if not resp:
-        raise RuntimeError("Failed to generate request. Exiting.")
+        raise RequestsError()
 
     return "-" * 25
          
