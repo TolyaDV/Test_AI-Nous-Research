@@ -1,5 +1,3 @@
-#Start scripts
-
 from colorama import init, Fore, Style
 
 import random
