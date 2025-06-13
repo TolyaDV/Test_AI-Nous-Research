@@ -1,4 +1,3 @@
-#
 class BalanceError(Exception):
     pass
 
