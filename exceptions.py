@@ -1,3 +1,5 @@
+#My exceptions
+
 class BalanceError(Exception):
     pass
 

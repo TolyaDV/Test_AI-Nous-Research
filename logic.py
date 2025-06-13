@@ -1,3 +1,5 @@
+#logic scripts
+
 import requests
 from colorama import init, Fore, Style
 
