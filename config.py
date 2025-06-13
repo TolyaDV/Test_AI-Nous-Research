@@ -1,5 +1,5 @@
-KEY_NOUS = ""
-KEY_GPT = ""
+API_KEY_NOUS = ""
+API_KEY_GPT = ""
 
 NOUS_AI_MODEL = "DeepHermes-3-Mistral-24B-Preview"
 GPT_MODEL = "gpt-4"
