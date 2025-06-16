@@ -25,6 +25,9 @@ def requests_function(url: str, headers: dict, data: dict, proxy: str | None = N
         if 'error' in response and 'insufficient_quota' in response['error'].get('type', ''):
             raise BalanceError(f"{RED}NOT ENOUGH BALANCE")
         
+        if 'error' in response:
+            raise Exception
+        
         return response['choices'][0]['message']['content']
 
     
@@ -38,7 +41,7 @@ def requests_function(url: str, headers: dict, data: dict, proxy: str | None = N
         logger.critical(str(e))
         sys.exit()
     except Exception as e:
-        logger.error(f"{RED}Unexpected error | {e}")
+        logger.error(f"{RED}Unexpected error | {response['error'].get('message', '')}")
         
     return None
 
